@@ -10,7 +10,8 @@ The aim of this project is to provide similar functionality, but reducing the nu
 of necessary swagger annotations (which force you to write the same information twice).
 
 see an [Example](src/test/scala/pl/touk/swaggerAkkaHttp/test/Example.scala) for
-usage or copy an [MinimalExample template](src/test/scala/pl/touk/swaggerAkkaHttp/test/MinimalExample.scala).
+usage or copy a [MinimalExample 
+template](src/test/scala/pl/touk/swaggerAkkaHttp/test/MinimalExample.scala).
 
 (as of 31.08.2015):
 ####working:
