@@ -49,8 +49,9 @@ object Example extends App  {
     apiWithSwagger {
       import pl.touk.swaggerAkkaHttp.swgr._
       import pl.touk.swaggerAkkaHttp.swgr.SwaggerMatcherImplicits._
-      //implicit conversion is needed for writing simply "user" / "something" instead of StringMatcher("user") / StringMatcher("something")
-      //so we have to exclude segmentStringToPathMatcher conversion to avoid ambiguity
+      // implicit conversion is needed for writing simply "user" / "something"
+      // instead of StringMatcher("user") / StringMatcher("something")
+      // so we have to exclude segmentStringToPathMatcher conversion to avoid ambiguity
       ApiOperation[User]("GetUserByName")
         .summary("Get user with given name")
         .notes("This is an implementation note")
