@@ -29,29 +29,28 @@ object SwaggerIntegration {
     .title("Auto-generated swagger spec")
     .version("0.0.0")
 
-  var swaggerUIPath = "swagger" //TODO: automatically change this in resources files
-
   implicit var swagger = new Swagger()
+  swagger.basePath("/")
+  var swaggerUIPath = "swagger"
 
   swagger.setPaths(scala.collection.mutable.Map[String,Path]())
-  
-  private val swaggerUIRoute =
+
+  //initializes swagger
+  def apiWithSwagger(endpoints: akka.http.scaladsl.server.Route) : akka.http.scaladsl.server.Route = {
+    swagger.info(info)
+      .host(interface+":"+port.toString)
+    val swaggerUIRoute =
     pathPrefix(swaggerUIPath) {
       path("swagger.json"){
         akka.http.scaladsl.server.Directives.complete {
           Json.mapper().writeValueAsString(swagger)
         }
       } ~
-      pathEnd{
-        redirect(akka.http.scaladsl.model.Uri(swaggerUIPath+"/index.html?url=http://"+interface+":"+port+"/"+swaggerUIPath+"/swagger.json"), akka.http.scaladsl.model.StatusCodes.MovedPermanently)
-      } ~
-      getFromResourceDirectory("swagger-ui")
+        pathEnd{
+          redirect(akka.http.scaladsl.model.Uri(swaggerUIPath+"/index.html?url=http://"+interface+":"+port+"/"+swaggerUIPath+"/swagger.json"), akka.http.scaladsl.model.StatusCodes.MovedPermanently)
+        } ~
+        getFromResourceDirectory("swagger-ui")
     }
-
-  //initializes swagger
-  def apiWithSwagger(endpoints: akka.http.scaladsl.server.Route) : akka.http.scaladsl.server.Route = {
-    swagger.info(info)
-      .host(interface+":"+port.toString)
     swaggerUIRoute ~ endpoints
   }
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package pl.touk.swaggerAkkaHttp.test
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -23,34 +24,38 @@ import de.heikoseeberger.akkahttpjson4s.Json4sSupport
 import org.json4s.{DefaultFormats, Formats, jackson}
 import pl.touk.swaggerAkkaHttp.SwaggerIntegration._
 
-object MyApp extends App {
+object MinimalExample extends App {
 
   import akka.http.scaladsl.server.Directives.{segmentStringToPathMatcher=>_,_}
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
+
   import Json4sSupport._
   implicit val serialization = jackson.Serialization
   implicit val formats: Formats = DefaultFormats
+
   import system.dispatcher
 
-  interface = "localhost"
-  port = 8080
-
+  case class ExampleClass(name:String, age:Int)
 
   val route: Route = {
     apiWithSwagger {
       import pl.touk.swaggerAkkaHttp.swgr._
-      ApiOperation[returnClass]()
-        .path(method, "endpoint" / "path"){
-          //akka-http normal routing for this operation
+      import pl.touk.swaggerAkkaHttp.swgr.SwaggerMatcherImplicits._
+      ApiOperation[ExampleClass]()
+        .path(GET, ""){
+        complete{
+          ExampleClass("it's alive!",666)
+        }
       }
-    } ~
-    {
-      import akka.http.scaladsl.server.Directives.segmentStringToPathMatcher
-     //akka-http normal not documented routing
     }
   }
-  addDefinition[anotherClass]
 
   val serverBinding = Http(system).bindAndHandle(route, interface, port)
 }
+/*
+  NOTES:
+  add these to your build.sbt dependencies:
+  "de.heikoseeberger" %% "akka-http-json4s" % "1.0.0",
+  "org.json4s" %% "json4s-jackson" % "3.2.11"
+ */
