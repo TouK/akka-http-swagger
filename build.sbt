@@ -1,17 +1,15 @@
 import com.banno.license.Licenses._
 import com.banno.license.Plugin.LicenseKeys._
-import net.virtualvoid.sbt.graph.Plugin._
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 import FilterKeys._
 
 val commonSettings =
   filterSettings ++
-    graphSettings ++
     licenseSettings ++
     Seq(
       organization  := "pl.touk",
-      scalaVersion  := "2.11.7",
+      scalaVersion  := "2.11.8",
       scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
       license := apache2("Copyright 2015 the original author or authors."),
       licenses :=  Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
@@ -53,11 +51,12 @@ val publishSettings = Seq(
   }
 )
 
-val akkaV = "2.4-M3"
+val akkaV = "2.4.4"
 val akkaStreamsV = "1.0"
-val json4sV = "3.2.11"
+val json4sV = "3.3.0"
 val scalaTestV = "3.0.0-M7"
-val swaggerCoreV = "1.5.0"
+val swaggerCoreV = "1.5.8"
+
 lazy val proj = (project in file(".")).
   settings(commonSettings).
   settings(publishSettings).
@@ -65,12 +64,12 @@ lazy val proj = (project in file(".")).
     name := "akka-http-swagger",
     libraryDependencies ++= {
       Seq(
-        "com.typesafe.akka"       %% "akka-http-experimental"        % akkaStreamsV,
+        "com.typesafe.akka"       %% "akka-http-experimental"        % akkaV,
         "io.swagger"              %  "swagger-core"                  % swaggerCoreV,
-        "io.swagger"              %% "swagger-scala-module"          % "1.0.0",
-        "de.heikoseeberger"       %% "akka-http-json4s"              % "1.0.0" % Test,
+        "io.swagger"              %% "swagger-scala-module"          % "1.0.2",
+        "de.heikoseeberger"       %% "akka-http-json4s"              % "1.6.0" % Test,
         "org.json4s"              %% "json4s-jackson"                % json4sV % Test,
-        "com.typesafe.akka"       %% "akka-http-testkit-experimental"% "1.0"   % Test,
+        "com.typesafe.akka"       %% "akka-http-testkit"             % "2.4.4"   % Test,
         "org.scalatest"           %% "scalatest"                     % scalaTestV % Test
       )
     }
